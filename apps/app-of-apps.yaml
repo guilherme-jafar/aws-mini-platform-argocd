@@ -8,7 +8,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "0"
 spec:
-  project: application-of-apps
+  project: mini-platform
   source:
     repoURL: git@github.com:guilherme-jafar/aws-mini-platform-argocd.git
     targetRevision: main
@@ -17,7 +17,7 @@ spec:
       recurse: true
   destination:
     server: https://kubernetes.default.svc
-    namespace:  argocd
+    namespace:  mini-platform-dev
   syncPolicy:
     automated:
       prune: true
