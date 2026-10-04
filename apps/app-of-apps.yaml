@@ -31,3 +31,5 @@ spec:
         duration: 5s
         factor: 2
         maxDuration: 3m
+
+      ## kubectl --kubeconfig ~/.kube/config-aws-mini-platform apply -f apps/app-of-apps.yaml to sync for the first time. After that, ArgoCD will automatically sync the apps defined in this app-of-apps.yaml file.
