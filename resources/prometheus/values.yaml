@@ -37,7 +37,7 @@ alertmanager:
     ## If true, storage will create or use Persistence Volume
     ## If false, storage will use emptyDir
     ##
-    enabled: true
+    enabled: false
 
     ## Custom annotations for the PVC created by the alertmanager StatefulSet.
     ## Useful for configuring storage provider options such as disk type, KMS encryption keys, or custom volume name prefixes.
@@ -101,10 +101,3 @@ prometheus-pushgateway:
   # Optional service annotations
   serviceAnnotations:
     prometheus.io/probe: pushgateway
-
-
-persistentVolume:
-  ## If true, Prometheus server will create/use a Persistent Volume Claim
-  ## If false, use emptyDir
-  ##
-  enabled: false
