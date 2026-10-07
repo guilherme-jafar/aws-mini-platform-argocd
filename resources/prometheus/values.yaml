@@ -1,0 +1,103 @@
+# yaml-language-server: $schema=values.schema.json
+# Default values for prometheus.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+rbac:
+  create: true
+
+
+## Prometheus server ConfigMap entries
+##
+
+# Adds option to add alert_relabel_configs to avoid duplicate alerts in alertmanager
+# useful in H/A prometheus with different external labels but the same alerts
+alertRelabelConfigs: {}
+  # alert_relabel_configs:
+  # - source_labels: [dc]
+  #   regex: (.+)\d+
+#   target_label: dc
+
+networkPolicy:
+  ## Enable creation of NetworkPolicy resources.
+  ##
+  enabled: false
+
+# Configuration of subcharts defined in Chart.yaml
+
+## alertmanager sub-chart configurable values
+## Please see https://github.com/prometheus-community/helm-charts/tree/main/charts/alertmanager
+##
+alertmanager:
+  ## If false, alertmanager will not be installed
+  ##
+  enabled: true
+
+  persistence:
+    ## If true, storage will create or use Persistence Volume
+    ## If false, storage will use emptyDir
+    ##
+    enabled: true
+
+    ## Custom annotations for the PVC created by the alertmanager StatefulSet.
+    ## Useful for configuring storage provider options such as disk type, KMS encryption keys, or custom volume name prefixes.
+    annotations: {}
+
+    ## Custom labels for the PVC created by the alertmanager StatefulSet.
+    ## Useful for selecting, grouping, and organizing so that they can be queried or targeted in deployments, policies, etc.
+    labels: {}
+
+    ## Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ## set, choosing the default provisioner.
+    ##
+    # storageClass: "-"
+    accessModes:
+      - ReadWriteOnce
+    size: 2Gi
+
+    ## Configure emptyDir volume
+    ##
+    emptyDir: {}
+
+  podSecurityContext:
+    runAsUser: 65534
+    runAsNonRoot: true
+    runAsGroup: 65534
+    fsGroup: 65534
+
+## kube-state-metrics sub-chart configurable values
+## Please see https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-state-metrics
+##
+kube-state-metrics:
+  ## If false, kube-state-metrics sub-chart will not be installed
+  ##
+  enabled: true
+
+## prometheus-node-exporter sub-chart configurable values
+## Please see https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-node-exporter
+##
+prometheus-node-exporter:
+  ## If false, node-exporter will not be installed
+  ##
+  enabled: true
+
+  rbac:
+    pspEnabled: false
+
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+
+## prometheus-pushgateway sub-chart configurable values
+## Please see https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-pushgateway
+##
+prometheus-pushgateway:
+  ## If false, pushgateway will not be installed
+  ##
+  enabled: true
+
+  # Optional service annotations
+  serviceAnnotations:
+    prometheus.io/probe: pushgateway

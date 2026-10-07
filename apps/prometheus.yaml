@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: app-of-apps
+  name: prometheus
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -12,9 +12,7 @@ spec:
   source:
     repoURL: git@github.com:guilherme-jafar/aws-mini-platform-argocd.git
     targetRevision: main
-    path: apps
-    directory:
-      recurse: true
+    path: resources/prometheus
   destination:
     server: https://kubernetes.default.svc
     namespace:  mini-platform-dev
@@ -31,3 +29,4 @@ spec:
         duration: 5s
         factor: 2
         maxDuration: 3m
+
