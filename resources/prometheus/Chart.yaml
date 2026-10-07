@@ -1,43 +1,47 @@
 apiVersion: v2
-name: prometheus
-# renovate: github=prometheus/prometheus
-appVersion: v3.15.0
-version: 29.36.0
-kubeVersion: ">=1.19.0-0"
-description: Prometheus is a monitoring system and time series database.
-home: https://prometheus.io/
+description: kube-prometheus-stack collects Kubernetes manifests, Grafana dashboards, and Prometheus rules combined with documentation and scripts to provide easy to operate end-to-end Kubernetes cluster monitoring with Prometheus using the Prometheus Operator.
 icon: https://raw.githubusercontent.com/prometheus/prometheus.github.io/master/assets/prometheus_logo-cb55bb5c346.png
-sources:
-  - https://github.com/prometheus/alertmanager
-  - https://github.com/prometheus/prometheus
-  - https://github.com/prometheus/pushgateway
-  - https://github.com/prometheus/node_exporter
-  - https://github.com/kubernetes/kube-state-metrics
 type: application
-dependencies:
-  - name: alertmanager
-    version: "2.1.0"
-    repository: oci://ghcr.io/prometheus-community/charts
-    condition: alertmanager.enabled
-  - name: kube-state-metrics
-    version: "8.6.0"
-    repository: oci://ghcr.io/prometheus-community/charts
-    condition: kube-state-metrics.enabled
-  - name: prometheus-node-exporter
-    version: "4.59.0"
-    repository: oci://ghcr.io/prometheus-community/charts
-    condition: prometheus-node-exporter.enabled
-  - name: prometheus-pushgateway
-    version: "3.9.0"
-    repository: oci://ghcr.io/prometheus-community/charts
-    condition: prometheus-pushgateway.enabled
+name: kube-prometheus-stack
+sources:
+  - https://github.com/prometheus-community/helm-charts
+  - https://github.com/prometheus-operator/kube-prometheus
+version: 92.1.1
+# renovate: github=prometheus-operator/prometheus-operator
+appVersion: v0.94.1
+kubeVersion: ">=1.25.0-0"
+home: https://github.com/prometheus-operator/kube-prometheus
 keywords:
-  - monitoring
+  - operator
   - prometheus
+  - kube-prometheus
 annotations:
   "artifacthub.io/license": Apache-2.0
+  "artifacthub.io/operator": "true"
   "artifacthub.io/links": |
     - name: Chart Source
       url: https://github.com/prometheus-community/helm-charts
     - name: Upstream Project
-      url: https://github.com/prometheus/prometheus
+      url: https://github.com/prometheus-operator/kube-prometheus
+    - name: Upgrade Process
+      url: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/README.md#upgrading-chart
+dependencies:
+  - name: crds
+    version: "0.0.0"
+    condition: crds.enabled
+  - name: kube-state-metrics
+    version: "8.6.0"
+    repository: oci://ghcr.io/prometheus-community/charts
+    condition: kubeStateMetrics.enabled
+  - name: prometheus-node-exporter
+    version: "4.59.0"
+    repository: oci://ghcr.io/prometheus-community/charts
+    condition: nodeExporter.enabled
+  - name: grafana
+    version: "13.3.1"
+    repository: oci://ghcr.io/grafana-community/helm-charts
+    condition: grafana.enabled
+  - name: prometheus-windows-exporter
+    repository: oci://ghcr.io/prometheus-community/charts
+    version: "0.12.*"
+    condition: windowsMonitoring.enabled
